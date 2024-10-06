@@ -11,6 +11,12 @@
 3. Data Analytical or Marts
 
 ### Data Ingestion approaches
-1. Batch 
-2. Stream-RT
-3. Stream-NRT
+1. Batch : Load Hourly data/daily data
+2. Stream-RT : Load the data as source system
+3. Stream-NRT : Load the data NRT
+
+## Data Architect
+![Data Architect](../Image/Modern_architect.png)
+1. Bronze : Raw layer, Data is ingested as it is
+2. Silver : Transformed or cleaned data 
+3. Gold : More aggregated data 
