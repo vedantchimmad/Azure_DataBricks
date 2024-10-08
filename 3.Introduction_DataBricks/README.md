@@ -2,16 +2,16 @@
 
 ---
 ### Properties
-* Apache spark as cloud native technology 
-* Secure cloud storage integration
-* ACID Transaction via Delta Lake integration
-* Unity Catalog for metadata Management
-* Cluster management
+* Apache spark as cloud native technology : DataBricks integrates cloud services to the apache spark 
+* Secure cloud storage integration : We can integrate the cloud storage to the Databricks
+* ACID Transaction via Delta Lake integration : ACID transaction to the delta table
+* Unity Catalog for metadata Management : User access management to the tables
+* Cluster management : Cluster management 
 * Photon query engine : Enhance SQL query output
 * NoteBooks and Workspace
-* Administration control
-* Optimized spark Runtime
-* Automation tools
+* Administration control : for Each workspace
+* Optimized spark Runtime : Inbuilt optimization techniques
+* Automation tools : to interact with DataBricks Workspace Rest API, SDK, CLI
 
 | Services               | Azure                                  | AWS                                             |
 |------------------------|----------------------------------------|-------------------------------------------------|
