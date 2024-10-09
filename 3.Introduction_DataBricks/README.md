@@ -1,6 +1,9 @@
 # DataBricks
 
 ---
+**What is DataBricks..?**
+
+Azure Databricks, an Apache Spark-based analytics platform, is a powerful, user-friendly, and collaborative solution within the cloud
 ### Properties
 * Apache spark as cloud native technology : DataBricks integrates cloud services to the apache spark 
 * Secure cloud storage integration : We can integrate the cloud storage to the Databricks
@@ -29,3 +32,6 @@
 | Key Management         | Azure Key vault                        | AWS KMS                                         |
 | Identity               | Azure Identity Management              | AWS IAM                                         |
 | Storage                | Azure Blob storage-ADLS Gen2           | Amazon S3                                       |
+
+### Azure DataBricks Architecture
+![Azure DataBricks Architecture](../Image/Azure_DataBricks_Architecture.png)
