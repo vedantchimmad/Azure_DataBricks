@@ -8,7 +8,7 @@ Delta Lake is an open-source storage layer, built on top of existing cloud stora
 
 > 🧠 **Note** :
 > * Delta Lake is just a storage layer and a transaction log format (with .parquet files plus _delta_log/ folder for tracking changes)
-
+> * Delta Lake is the default table format in DataBricks
 ### Main features of Delta Lake:
 
 * ACID transactions: Ensures data integrity (Atomicity, Consistency, Isolation, Durability) when multiple users or jobs are reading and writing data.
