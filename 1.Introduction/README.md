@@ -21,7 +21,7 @@
 2. Silver : Transformed or cleaned data 
 3. Gold : More aggregated data 
 
-### 🧩 What are Data Operations?
+## 🧩 What are Data Operations?
 
 **Data operations** refer to all activities that involve **managing, processing, moving, transforming, securing, or maintaining data** to make it usable, reliable, and accessible.
 
@@ -42,3 +42,42 @@ In simple terms:
 | **Security**          | Protecting data via encryption, masking, or access control.       |
 | **Monitoring**        | Observing pipelines for failures, delays, or data quality issues. |
 | **Data Movement**     | Transferring data between different systems or layers.            |
+
+## 🧩 What is ACID?
+
+> 🔥 **ACID** stands for:
+> - **A**tomicity
+> - **C**onsistency
+> - **I**solation
+> - **D**urability
+
+These are key properties that **guarantee reliable database transactions** — and Delta Lake brings these properties to your **data lake files** (like on S3, ADLS, GCS).
+
+---
+
+### 🛠️ ACID Explained (Delta Lake Style)
+
+| Property | What It Means | How Delta Lake Achieves It |
+|:---------|:--------------|:---------------------------|
+| **Atomicity** | Operations are **all or nothing** (no partial writes). | Writes are recorded as single atomic commits in the `_delta_log/`. |
+| **Consistency** | Data must stay **valid** according to schema and rules. | Schema enforcement, transaction checks before commit. |
+| **Isolation** | Concurrent transactions should **not interfere** with each other. | Optimistic concurrency control — reads and writes happen safely in parallel. |
+| **Durability** | Once a write is **committed**, it will survive failures. | Transaction logs and file system guarantees make changes permanent. |
+
+---
+---
+
+### 🚀 Example: How It Works in Practice
+
+Suppose two users are writing to the same Delta Table:
+
+1. User A reads data.
+2. User B writes and commits a change (creates a new JSON log).
+3. User A tries to write — but Delta detects the conflict.
+4. User A’s operation either:
+    - Fails gracefully, or
+    - Is retried with the updated table version.
+
+✅ Result: No corruption, no data loss, no partial updates.
+
+---
