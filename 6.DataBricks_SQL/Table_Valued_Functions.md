@@ -250,4 +250,55 @@ DESCRIBE FUNCTION my_catalog.sales_schema.get_top_customers;
 ```
 
 ---
+## 🧠 Example: Creating and Using a SQL UDF in Databricks
 
+This example demonstrates how to create a **scalar User-Defined Function (UDF)** in SQL to generate a custom sale message for items in a table.
+
+---
+
+### ✅ UDF: `sale_announcement`
+
+#### 📌 Purpose:
+This function takes an item name and price, applies a 20% discount, and returns a message string.
+
+---
+
+### 🔧 Create or Replace the Function
+
+```sql
+CREATE OR REPLACE FUNCTION sale_announcement(item_name STRING, item_price INT)
+RETURNS STRING
+RETURN concat("The ", item_name, " is on sale for $", round(item_price * 0.8, 0));
+```
+
+- `item_name`: Name of the product (string).
+- `item_price`: Original price (integer).
+- The function returns a **concatenated string** with a 20% discount applied.
+
+---
+
+### 🧪 Use the Function in a Query
+
+```sql
+SELECT *, 
+  sale_announcement(name, price) AS message 
+FROM item_lookup;
+```
+
+#### 🔍 Sample Output:
+
+| name        | price | message                                |
+|-------------|-------|----------------------------------------|
+| Headphones  | 150   | The Headphones is on sale for $120     |
+| Laptop      | 1000  | The Laptop is on sale for $800         |
+| Keyboard    | 70    | The Keyboard is on sale for $56        |
+
+---
+
+### ✅ Key Points
+
+- You can reuse the function across any SQL queries in your workspace.
+- Great for **business logic**, **templating**, and **string formatting**.
+- You can use `CREATE FUNCTION` with any SQL expression (arithmetic, string, date).
+
+---
