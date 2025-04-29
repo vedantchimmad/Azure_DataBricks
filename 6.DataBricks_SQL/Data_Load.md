@@ -240,3 +240,234 @@ This creates a clone of the `sales_data` table as it was on **April 1st, 2025, a
 - **Versioned Cloning** allows you to capture a snapshot of the table from a specific point in time for **auditing** or **historical analysis**.
 
 ---
+## 🧑‍💻 `INSERT OVERWRITE` in Delta Lake
+
+The `INSERT OVERWRITE` statement in Delta Lake is used to **replace** the existing data in a table or a partition with new data. This operation overwrites the existing data entirely.
+
+It can be used for:
+- Replacing the **entire table** data.
+- Overwriting a specific **partition** in a partitioned table.
+
+---
+
+### ✅ 1. Basic Syntax
+
+To overwrite the entire table:
+
+```sql
+INSERT OVERWRITE TABLE table_name
+SELECT * FROM source_table;
+```
+
+To overwrite a specific partition:
+
+```sql
+INSERT OVERWRITE TABLE table_name
+PARTITION (partition_column = 'partition_value')
+SELECT * FROM source_table;
+```
+
+---
+
+### ✅ 2. Example: Overwrite Entire Table
+
+```sql
+-- Overwriting the entire table with new data
+INSERT OVERWRITE TABLE sales_data
+SELECT * FROM new_sales_data;
+```
+
+This will replace all the rows in the `sales_data` table with the data from `new_sales_data`.
+
+---
+
+### ✅ 3. Example: Overwrite a Partition
+
+If the table is partitioned by a column, such as `year`, you can overwrite a specific partition.
+
+```sql
+-- Overwriting a specific partition (e.g., for the year 2024)
+INSERT OVERWRITE TABLE sales_data
+PARTITION (year = 2024)
+SELECT * FROM new_sales_data_2024;
+```
+
+This will replace all the rows in the partition `year = 2024` with the data from `new_sales_data_2024`.
+
+---
+
+### ✅ 4. Key Points
+
+- **Overwrites entire table or partition**: Data is completely replaced by the data from the `SELECT` statement.
+- **Used for data updates**: Commonly used when you need to **replace outdated data** in the table or a partition.
+- **Table schema should match**: The schema of the source data should match the schema of the target table.
+
+---
+
+### ⚠️ 5. Considerations
+
+- **Data Loss**: The `INSERT OVERWRITE` operation completely replaces the existing data, which means any old data in the table or partition will be lost.
+- **Efficiency**: If you are overwriting large tables or partitions, ensure that the source data is efficiently processed to avoid performance issues.
+
+---
+
+### 📌 Use Cases
+
+| **Scenario**                 | **Command**                                                                              |
+|------------------------------|------------------------------------------------------------------------------------------|
+| Overwrite the entire table   | `INSERT OVERWRITE TABLE table_name SELECT * FROM new_table`                              |
+| Overwrite specific partition | `INSERT OVERWRITE TABLE table_name PARTITION (year = 2024) SELECT * FROM new_table_2024` |
+
+---
+
+### 🧑‍💻 Conclusion
+
+- **`INSERT OVERWRITE`** is a powerful command for replacing data in Delta tables, whether it’s the entire table or specific partitions.
+- Always ensure that the new data has the same schema as the table you are overwriting.
+---
+## 🔁 MERGE INTO in Delta Lake (Upserts)
+
+The `MERGE INTO` statement in Delta Lake is used to **perform upserts**, i.e., to **insert**, **update**, or **delete** data conditionally in a target table by comparing it to a source table or dataset.
+
+This is similar to SQL `MERGE` or `UPSERT` logic and is a key feature enabled by Delta Lake's **ACID compliance**.
+
+---
+
+### ✅ 1. Basic Syntax
+
+```sql
+MERGE INTO target_table AS target
+USING source_table AS source
+ON <merge_condition>
+WHEN MATCHED THEN UPDATE SET *
+WHEN NOT MATCHED THEN INSERT *;
+```
+
+You can customize each clause to suit your use case.
+
+---
+
+### ✅ 2. Example: Upsert Data
+
+```sql
+MERGE INTO customers AS target
+USING updates AS source
+ON target.customer_id = source.customer_id
+WHEN MATCHED THEN 
+  UPDATE SET 
+    target.name = source.name,
+    target.address = source.address
+WHEN NOT MATCHED THEN 
+  INSERT (customer_id, name, address) 
+  VALUES (source.customer_id, source.name, source.address);
+```
+
+This performs the following:
+- **Updates** existing customers if `customer_id` matches.
+- **Inserts** new customers if there's no match.
+
+---
+
+### ✅ 3. Example: Conditional Logic
+
+```sql
+MERGE INTO sales AS target
+USING staging_sales AS source
+ON target.id = source.id
+WHEN MATCHED AND source.amount > target.amount THEN
+  UPDATE SET target.amount = source.amount
+WHEN NOT MATCHED THEN
+  INSERT (id, amount) VALUES (source
+```
+---
+### 🔍 Variations
+
+#### Update Only (No Insert):
+
+```sql
+MERGE INTO target AS t
+USING source AS s
+ON t.id = s.id
+WHEN MATCHED THEN
+  UPDATE SET t.name = s.name;
+```
+
+---
+
+#### Insert Only (No Update):
+
+```sql
+MERGE INTO target AS t
+USING source AS s
+ON t.id = s.id
+WHEN NOT MATCHED THEN
+  INSERT *;
+```
+
+---
+
+#### Delete Matched Rows:
+
+```sql
+MERGE INTO logs AS t
+USING old_logs AS s
+ON t.log_id = s.log_id
+WHEN MATCHED THEN DELETE;
+```
+
+---
+
+#### Conditional Logic:
+
+```sql
+MERGE INTO orders AS t
+USING updates AS s
+ON t.order_id = s.order_id
+
+WHEN MATCHED AND s.status = 'cancelled' THEN
+  DELETE
+
+WHEN MATCHED THEN
+  UPDATE SET t.status = s.status
+
+WHEN NOT MATCHED THEN
+  INSERT *;
+```
+
+---
+
+## ⚙️ Schema Auto Merge (Optional)
+
+Delta Lake supports schema evolution during merge.
+
+```sql
+SET spark.databricks.delta.schema.autoMerge.enabled = true;
+```
+
+---
+
+## 🧠 Use Cases
+
+| Use Case                   | MERGE Action                       |
+|----------------------------|------------------------------------|
+| Change Data Capture        | Update/Insert rows                 |
+| Deduplication              | Insert new, update duplicates      |
+| Slowly Changing Dimensions | Merge with timestamp logic         |
+| ETL pipelines              | Efficient upserts                  |
+
+---
+
+## 🏁 Conclusion
+
+- `MERGE INTO` helps you build efficient and reliable **data pipelines**.
+- It supports **atomic operations** with **ACID guarantees**.
+- It’s a key component in **Delta Lake** and **Lakehouse** architectures.
+
+```sql
+-- Template for reuse
+MERGE INTO <target> AS t
+USING <source> AS s
+ON <join_condition>
+WHEN MATCHED THEN UPDATE SET *
+WHEN NOT MATCHED THEN INSERT *;
+```
