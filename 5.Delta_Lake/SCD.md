@@ -1,16 +1,16 @@
-# 🔄 Types of Slowly Changing Dimensions (SCD) in Databricks
+## 🔄 Types of Slowly Changing Dimensions (SCD) in Databricks
 
 Databricks supports multiple types of **Slowly Changing Dimension (SCD)** strategies using **Delta Lake**, **MERGE**, and **SQL logic** to track changes in dimensional data over time.
 
 ---
 
-## 🧠 What is SCD?
+### 🧠 What is SCD?
 
 Slowly Changing Dimensions are used in data warehouses to manage and store **historical data** in dimension tables where data changes slowly but needs to be tracked accurately.
 
 ---
 
-## ✅ SCD Type 0: No Changes Allowed
+### ✅ SCD Type 0: No Changes Allowed
 
 **Frozen dimension** — values never change once inserted.
 
@@ -20,7 +20,7 @@ Use Case: Immutable reference data like Country Codes.
 
 ---
 
-## ✅ SCD Type 1: Overwrite Old Data (No History)
+### ✅ SCD Type 1: Overwrite Old Data (No History)
 
 **Updates the existing record** without keeping history.
 
@@ -38,7 +38,7 @@ WHEN NOT MATCHED THEN
 
 ---
 
-## ✅ SCD Type 2: Add New Row for Each Change (Full History)
+### ✅ SCD Type 2: Add New Row for Each Change (Full History)
 
 Tracks changes by **inserting a new row** for each version.
 
@@ -59,7 +59,7 @@ VALUES ('123', 'John Doe', 'New Address', true, current_date(), NULL);
 
 ---
 
-## ✅ SCD Type 3: Add New Columns to Track Recent History
+### ✅ SCD Type 3: Add New Columns to Track Recent History
 
 Stores only the **previous value** in a separate column.
 
@@ -76,7 +76,7 @@ WHERE customer_id = '123';
 
 ---
 
-## ✅ SCD Type 6 (Hybrid of 1, 2, and 3)
+### ✅ SCD Type 6 (Hybrid of 1, 2, and 3)
 
 Combines:
 - Overwrite current record (Type 1)
@@ -87,7 +87,7 @@ Combines:
 
 ---
 
-## 📌 Summary Table
+### 📌 Summary Table
 
 | Type | Description                       | Tracks History | Additional Columns Needed       |
 |------|-----------------------------------|----------------|----------------------------------|
@@ -99,7 +99,7 @@ Combines:
 
 ---
 
-## ⚙️ Delta Lake + MERGE for SCDs in Databricks
+### ⚙️ Delta Lake + MERGE for SCDs in Databricks
 
 Databricks + Delta Lake provides:
 - ACID transactions
@@ -108,7 +108,7 @@ Databricks + Delta Lake provides:
 
 ---
 
-## 🧠 Best Practices
+### 🧠 Best Practices
 
 - Use **Delta tables** with schema evolution.
 - Use **MERGE INTO** for efficient updates/inserts.
